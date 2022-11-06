@@ -1,0 +1,4 @@
+/node_modules
+/src/config/keys.ts
+.env
+/dist
