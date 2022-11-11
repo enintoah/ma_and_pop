@@ -9,8 +9,22 @@ import { setAuthToken, logout } from './utils/session_api_util';
 import jwt_decode from "jwt-decode"
 import { createContext } from 'react';
 
-let loggedIn:any = false 
-const sessionContext = createContext(loggedIn)
+type UniversalUserObject = {
+  decodedUser: {
+    exp?: number,
+    iat?: number,
+    handle?: string,
+    id?: string
+  },
+  loggedIn: boolean
+}
+
+let loggedIn:UniversalUserObject = {
+  decodedUser: {},
+  loggedIn: false 
+}
+
+export const sessionContext = createContext(loggedIn)
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -31,19 +45,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
     loggedIn = {decodedUser, loggedIn: true}
   }
+  root.render(
+    <React.StrictMode>
+      <HashRouter>
+        <sessionContext.Provider value={loggedIn}>
+          <App />
+        </sessionContext.Provider>
+      </HashRouter>
+    </React.StrictMode>
+  );
 })
 
 
-
-root.render(
-  <React.StrictMode>
-    <HashRouter>
-      <sessionContext.Provider value={loggedIn}>
-        <App />
-      </sessionContext.Provider>
-    </HashRouter>
-  </React.StrictMode>
-);
 
 
 reportWebVitals();

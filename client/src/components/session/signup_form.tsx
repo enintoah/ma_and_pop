@@ -1,8 +1,10 @@
 import React, { useState } from "react"
 import { userSignupDataObject } from "../../types/session"
+import { signup } from "../../utils/session_api_util"
 
 export const SignupForm = () => {
   const [credentials, updateCredentials] = useState<userSignupDataObject>({handle: "", email: "", password: "", password2: ""})
+  const [errors, updateErrors] = useState()
 
   const update = (field: string) => {
     return (e: React.ChangeEvent<HTMLInputElement>):void => {
@@ -11,7 +13,7 @@ export const SignupForm = () => {
   }
 
   const submit = () => {
-
+    
   }
 
   return (

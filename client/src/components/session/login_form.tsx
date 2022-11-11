@@ -1,9 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {userLoginDataObject} from './../../types/session'
-import { login } from "../../utils/session_api_util";
+import { login, setAuthToken } from "../../utils/session_api_util";
+import { withRouter } from 'react-router-dom'
+import { sessionContext } from './../../index'
+import useOnlyLoggedOut from "../customHooks/loggedOutOnly";
 
-export const LoginForm = () => {
+
+
+const LoginForm = ({ history }: any) => {
   const [credentials, updateCredentials] = useState<userLoginDataObject>({email: "", password: ""})
+  const [errors, updateErrors] = useState()
+
+  const session = useContext(sessionContext)
+
+  useOnlyLoggedOut(history, session.loggedIn)
 
   const update = (field: string) => {
     return (e: React.ChangeEvent<HTMLInputElement>):void => {
@@ -13,8 +23,15 @@ export const LoginForm = () => {
 
   const submit = () => {
     login(credentials)
-      .then(() => {
-        
+      .then((res: any) => {
+        const { token } = res.data
+        localStorage.setItem("jwtToken", token)
+        setAuthToken(token)
+        history.push('/profile')
+      })
+      .catch( ({ data }) => {
+        console.log(err.response.data)
+        updateErrors(err.response.data)
       })
   }
 
@@ -29,7 +46,10 @@ export const LoginForm = () => {
       <button onClick={submit}>
         Submit
       </button>
+
     </div>
   )
 
 }
+
+export default withRouter(LoginForm)

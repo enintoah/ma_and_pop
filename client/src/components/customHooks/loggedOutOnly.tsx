@@ -1,6 +1,10 @@
+import {withRouter} from 'react-router-dom'
 
-const useLoggedIn = () => {
 
+const useOnlyLoggedOut = (history :any, loggedIn: boolean) => {
+  if (loggedIn) {
+    history.push('/profile')
+  }
 }
 
-export default useLoggedIn
+export default useOnlyLoggedOut

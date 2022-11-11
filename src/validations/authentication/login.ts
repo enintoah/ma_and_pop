@@ -1,14 +1,14 @@
 const Validator = require('validator');
-import { validText } from '../valid-text'
+import { validText } from './../valid-text'
 
 type errorsObject = {
-  email?: String
-  password?: String 
+  email?: string
+  password?: string 
 }
 
-type loginObject = {
-  email: String
-  password: String
+export type loginObject = {
+  email: string
+  password: string
 }
 
 module.exports = function validateLoginInput(data: loginObject) {
