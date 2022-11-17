@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import {userLoginDataObject} from './../../types/session'
+import {userLoginDataObject, loginErrorsObject} from './../../types/session'
 import { login, setAuthToken } from "../../utils/session_api_util";
 import { withRouter } from 'react-router-dom'
 import { sessionContext } from './../../index'
@@ -9,7 +9,7 @@ import useOnlyLoggedOut from "../customHooks/loggedOutOnly";
 
 const LoginForm = ({ history }: any) => {
   const [credentials, updateCredentials] = useState<userLoginDataObject>({email: "", password: ""})
-  const [errors, updateErrors] = useState()
+  const [errors, updateErrors] = useState<loginErrorsObject>({})
 
   const session = useContext(sessionContext)
 
@@ -29,14 +29,15 @@ const LoginForm = ({ history }: any) => {
         setAuthToken(token)
         history.push('/profile')
       })
-      .catch( ({ data }) => {
-        console.log(err.response.data)
+      .catch( (err: any) => {
         updateErrors(err.response.data)
       })
   }
 
   return (
     <div>
+      <div>{errors.email ? errors.email : ""}</div>
+      <div>{errors.password ? errors.password : ""}</div>
       <label>Email:
         <input type="text" defaultValue={credentials?.email} onChange={ update('email') }/>
       </label>
