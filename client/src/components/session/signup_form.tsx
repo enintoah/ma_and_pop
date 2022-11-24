@@ -10,10 +10,6 @@ const SignupForm = ({history}: any) => {
   const [frontendErrors, updateFrontendErrors] = useState<frontendErrorsObject>({emailEmpty: "", handleEmpty: "", passwordLength: "", passwordsMatch: "", passwordEmpty: ""})
 
   useEffect(() => {
-    if (credentials.password2.length > 0 && credentials.password.length > 0) {
-      console.log('bruh')
-      updateFrontendErrors({...frontendErrors, passwordEmpty: ""})
-    }
 
     if (credentials.email !== "") {
       updateFrontendErrors({...frontendErrors, emailEmpty: ""})
@@ -28,14 +24,21 @@ const SignupForm = ({history}: any) => {
     } else if (frontendErrors.passwordLength !== "") {
       updateFrontendErrors({...frontendErrors, passwordLength: ""})
     }
+  
+  }, [credentials])  
 
+  useEffect(() => { 
     if (credentials.password2 !== "" && credentials.password !== credentials.password2) {
       updateFrontendErrors({...frontendErrors, passwordsMatch: "Passwords must match"})
     } else if (frontendErrors.passwordsMatch !== ""){
       updateFrontendErrors({...frontendErrors, passwordsMatch: ""})
     }
-  
-  }, [credentials])  
+
+    if (credentials.password2.length > 0 && credentials.password.length > 0) {
+      updateFrontendErrors({...frontendErrors, passwordEmpty: ""})
+    }
+
+  }, [credentials.password, credentials.password2])
 
   const update = (field: string) => {
     return (e: React.ChangeEvent<HTMLInputElement>):void => {
@@ -58,21 +61,21 @@ const SignupForm = ({history}: any) => {
       credentialsValid = false 
     }
 
-    if (!credentialsValid || frontendErrors.passwordLength !== "" || frontendErrors.passwordsMatch !== "") {
-      console.log(credentials)
-    } else {
-      signup(credentials)
-        .then((res: any) => {
-          const { token } = res.data
-          localStorage.setItem("jwtToken", token)
-          setAuthToken(token)
-          history.push('/profile')
-        })
-        .catch((err: any) => {
-          console.log(err.response.data)
-          updateBackendErrors(err.response.data)
-        })  
-    }
+    // if (!credentialsValid || frontendErrors.passwordLength !== "" || frontendErrors.passwordsMatch !== "") {
+    //   console.log(credentials)
+    // } else {
+    //   signup(credentials)
+    //     .then((res: any) => {
+    //       const { token } = res.data
+    //       localStorage.setItem("jwtToken", token)
+    //       setAuthToken(token)
+    //       history.push('/profile')
+    //     })
+    //     .catch((err: any) => {
+    //       console.log(err.response.data)
+    //       updateBackendErrors(err.response.data)
+    //     })  
+    // }
 
   }
 
